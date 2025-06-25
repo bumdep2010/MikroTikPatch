@@ -58,7 +58,6 @@ env:
   CUSTOM_RENEW_URL: ${{ secrets.CUSTOM_RENEW_URL }}
   MIKRO_CLOUD_URL: ${{ secrets.MIKRO_CLOUD_URL }}
   CUSTOM_CLOUD_URL: ${{ secrets.CUSTOM_CLOUD_URL }}
-  SKIP_LOADER: true
 
 jobs:
   Set_Variables:
@@ -148,13 +147,6 @@ jobs:
         echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_ENV
         sudo apt-get update > /dev/null
         
-    - name: Get loader patch files
-      if: steps.get_latest.outputs.has_new_version == 'true'
-      run: |
-        wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/loader.7z
-        sudo apt-get install -y p7zip-full > /dev/null
-        7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null
-        rm loader.7z
 
     - name: Cache Squashfs
       if: steps.get_latest.outputs.has_new_version == 'true'
